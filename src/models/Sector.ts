@@ -1,0 +1,1 @@
+export type Sector = "frontend" | "backend" | "full-stack"

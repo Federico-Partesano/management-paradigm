@@ -1,0 +1,7 @@
+build
+node_modules
+layer
+.serverless
+.webpack
+.env.*
+coverage
