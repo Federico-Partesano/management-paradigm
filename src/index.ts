@@ -35,6 +35,9 @@ app.get("/", async(req, res) => {
     const t = await PersonModel.find({name: "ciao"});
     res.json({message: t})
 });
+app.get("/test", async(req, res) => {
+    res.json({message: "ok"})
+});
 
 app.listen(port, () => console.log("Server is running"));
 
