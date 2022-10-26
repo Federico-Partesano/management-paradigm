@@ -6,6 +6,9 @@ import persons from "./routes/persons";
 import teams from "./routes/teams";
 import bodyParser from "body-parser";
 import { TeamsModel } from "./models/Teams";
+
+const port = process.env.PORT || 3005;
+
 const app = express();
 app.use(bodyParser.urlencoded({
     extended: true
@@ -33,4 +36,6 @@ app.get("/", async(req, res) => {
     res.json({message: t})
 });
 
-app.listen(3005, () => console.log("Server is running"));
+app.listen(port, () => console.log("Server is running"));
+
+export default app;
