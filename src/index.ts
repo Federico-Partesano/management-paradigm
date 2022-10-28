@@ -20,7 +20,7 @@ app.use(cors());
 app.options("*", cors() as any);
 
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost:27017/paradigma",
+  process.env.MONGDB_URI || "mongodb://localhost:27017/paradigma",
   (err) => {
     console.log(!err ? "Succefully connection" : "Db error");
   }
