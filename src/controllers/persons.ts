@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Person, PersonModel } from "../models/Person";
 import { getRandomData } from "../utils/getRandomDataMock";
-import { populateTeamsGetPersons } from "../utils/populateTeamsgetPersons";
+import { populateTeamsGetPersons } from "../utils/populateTeamsGetPersons";
 
 export const personsController = {
   addNewPerson: async ({ body }: Request<{}, {}, Person>, res: Response) => {
