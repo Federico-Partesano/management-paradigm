@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Person, PersonModel } from "../models/Person";
 import { getRandomData } from "../utils/getRandomDataMock";
+import { populateTeamsGetPersons } from "../utils/populateTeamsgetPersons";
 
 export const personsController = {
   addNewPerson: async ({ body }: Request<{}, {}, Person>, res: Response) => {
@@ -28,7 +29,7 @@ export const personsController = {
     await PersonModel.insertMany(array);
     return res.json({ message: "Random persons inserted" });
   },
-  getPerson: async ({ query }: Request, res: Response) => {
+  getPersons: async ({ query }: Request, res: Response) => {
     const { limit = "10", page = "1", search = "" } = query;
     const filterByString = search
       ? {
@@ -44,7 +45,8 @@ export const personsController = {
       limit: +limit,
       page: +page,
     });
-    return res.json(persons);
+    const populatePersonsWithTeams = await populateTeamsGetPersons(persons);
+    return res.json(populatePersonsWithTeams);
   },
   editPerson: async (
     { body, params: { id } }: Request<{ id: string }, {}, Person>,

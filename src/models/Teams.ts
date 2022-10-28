@@ -46,7 +46,7 @@ const teamSchema = new Schema<Team>(
 );
 teamSchema.plugin(paginate);
 
-interface InstitutionDocument extends mongoose.Document, Team {}
+export interface InstitutionDocument extends mongoose.Document, Team {}
 
 export const TeamsModel = model<
   InstitutionDocument,

@@ -10,7 +10,10 @@ const getPercentual = (contractType: ContractType) =>
   }[contractType]);
 
 export const updateWorkLoadPersons = async (idPersonsTeam: string[]) => {
-  const teams = await TeamsModel.find().populate({
+    const $or = idPersonsTeam.map((id) => ({"persons.person": id}));
+  const teams = await TeamsModel.find({
+    $or
+  }).populate({
     path: "persons",
     // Get friends of friends - populate the 'friends' array for every friend
     populate: { path: "person" },

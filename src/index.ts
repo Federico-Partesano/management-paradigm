@@ -10,33 +10,61 @@ import { TeamsModel } from "./models/Teams";
 const port = process.env.PORT || 3005;
 
 const app = express();
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());app.use(cors());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(bodyParser.json());
+app.use(cors());
 app.options("*", cors() as any);
 
-mongoose.connect("mongodb://localhost:27017/paradigma" ,(err) => {
-  console.log(!err ? "Succefully connection" : "Db error");
-});
-
-
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost:27017/paradigma",
+  (err) => {
+    console.log(!err ? "Succefully connection" : "Db error");
+  }
+);
 
 app.use("/persons", persons);
 app.use("/teams", teams);
 
-app.get("/s", async(req, res) => {
-    const t = await TeamsModel.find({}).populate("persons");
-    res.json({message: t})
+app.get("/s", async (req, res) => {
+  const t = await TeamsModel.find({}).populate("persons");
+  res.json({ message: t });
 });
-    // const result = PersonModel.insertMany([{name: "ciao", surname: "prova", email: "email", skills: ["prova"], sector: "Frontend"}]);
+app.get("/sss", async (req, res) => {
+  const filters = [
+    {
+      $lookup: {
+        from: "peoples",
+        localField: "persons.person",
+        foreignField: "_id",
+        as: "persons",
+      },
+    },
+    // {
+    //     '$unwind': {
+    //       'path': '$person'
+    //      }
+    // },
+    {
+      $match: {
+        "persons.person._id": { $ne: "6353f42f14062dc67ccfac70" },
+      },
+    },
+  ];
+  const t = await TeamsModel.aggregate(filters);
+  return res.json({ test: t });
+});
+// const result = PersonModel.insertMany([{name: "ciao", surname: "prova", email: "email", skills: ["prova"], sector: "Frontend"}]);
 
-app.get("/", async(req, res) => {
-    const t = await PersonModel.find({name: "ciao"});
-    res.json({message: t})
+app.get("/", async (req, res) => {
+  const t = await PersonModel.find({ name: "ciao" });
+  res.json({ message: t });
 });
-app.get("/test", async(req, res) => {
-    res.json({message: "ok"})
+app.get("/test", async (req, res) => {
+  res.json({ message: "ok" });
 });
 
 app.listen(port, () => console.log("Server is running"));

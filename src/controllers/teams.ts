@@ -42,33 +42,9 @@ export const teamsController = {
     res: Response
   ) => {
     const { persons } = body;
-    // const filters = [
-    //   {
-    //     $lookup: {
-    //       from: "peoples",
-    //       localField: "person",
-    //       foreignField: "_id",
-    //       as: "persons",
-    //     },
-    //   },
-    //   // {
-    //   //     '$unwind': {
-    //   //       'path': '$person'
-    //   //      }
-    //   // },
-    //   // {
-    //   //   $match: {
-    //   //     "person._id": { $eq: persons[0].person },
-    //   //   },
-    //   // },
-    // ];
-
     const currentTeam: Team<PostTeam> | null = await TeamsModel.findById(id);
-    if (!currentTeam)
-      return res.status(404).json({ message: "Team not found." });
-    const prevIdPersons = currentTeam.persons.map(({ person }) =>
-      person.toString()
-    );
+    if(!currentTeam) return res.status(404).json({message: "Team not found."})
+    const prevIdPersons = currentTeam.persons.map(({ person }) => person.toString())
     await TeamsModel.updateOne(
       { _id: id },
       {
@@ -77,7 +53,7 @@ export const teamsController = {
         },
       }
     );
-    updateWorkLoadPersons([
+    await updateWorkLoadPersons([
       ...new Set([...persons.map(({ person }) => person), ...prevIdPersons]),
     ]);
     return res.json({ message: "ok" });

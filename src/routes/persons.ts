@@ -7,7 +7,7 @@ import { mongoIdValidator } from "../utils/validMongoId";
 const router = express.Router();
 const {
   addNewPerson,
-  getPerson,
+  getPersons,
   deletePerson,
   editPerson,
   addMorePersons,
@@ -28,7 +28,7 @@ router.patch(
   checkErrorValidation,
   editPerson
 );
-router.get("/", simulateLazy, getPerson);
+router.get("/", simulateLazy, getPersons);
 router.get("/add", simulateLazy, addMorePersons);
 router.get("/delete", simulateLazy, deletePersons);
 router.delete(

@@ -1,6 +1,7 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 import { Sector } from "./Sector";
+import { Team } from "./Teams";
 
 export interface Person extends Document {
   name: string;
