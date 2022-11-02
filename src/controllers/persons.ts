@@ -32,27 +32,26 @@ export const personsController = {
   getPersons: async ({ query }: Request, res: Response) => {
     const { limit = "10", page = "1", search = "", workLoad, skills = [] } = query;
     // const $or = (skills as string[]).map((id) => ({"skills": id}));
-return res.json({message: "test"});
-    // let filterByString: Record<string, any> = search
-    //   ? {
-    //       $or: [
-    //         { name: { $regex: new RegExp(search as string, "i") } },
-    //         { surname: { $regex: new RegExp(search as string, "i") } },
-    //         { email: { $regex: new RegExp(search as string, "i") } },
-    //         { sector: { $regex: new RegExp(search as string, "i") } },
-    //       ],
-    //     }
-    //   : {};
+    let filterByString: Record<string, any> = search
+      ? {
+          $or: [
+            { name: { $regex: new RegExp(search as string, "i") } },
+            { surname: { $regex: new RegExp(search as string, "i") } },
+            { email: { $regex: new RegExp(search as string, "i") } },
+            { sector: { $regex: new RegExp(search as string, "i") } },
+          ],
+        }
+      : {};
 
-    // if (workLoad !== undefined)
-    //   filterByString["workLoad"] = { $lt: (+workLoad) + 1 };
-    // const persons = await PersonModel.paginate(filterByString, {
-    //   populate: "skills",
-    //   limit: +limit,
-    //   page: +page,
-    // });
-    // const populatePersonsWithTeams = await populateTeamsGetPersons(persons);
-    // return res.json(populatePersonsWithTeams);
+    if (workLoad !== undefined)
+      filterByString["workLoad"] = { $lt: (+workLoad) + 1 };
+    const persons = await PersonModel.paginate(filterByString, {
+      populate: "skills",
+      limit: +limit,
+      page: +page,
+    });
+    const populatePersonsWithTeams = await populateTeamsGetPersons(persons);
+    return res.json(populatePersonsWithTeams);
   },
   editPerson: async (
     { body, params: { id } }: Request<{ id: string }, {}, Person>,
