@@ -1,7 +1,6 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 import { Sector } from "./Sector";
-import { Team } from "./Teams";
 
 export interface Person extends Document {
   name: string;
@@ -17,7 +16,7 @@ export const personSchema = new Schema<Person>(
     name: String,
     surname: String,
     email: String,
-    skills: [String],
+    skills: [{ type: Schema.Types.ObjectId, ref: "skills" }],
     sector: String,
     workLoad: Number,
   },

@@ -6,7 +6,7 @@ const getPercentual = (contractType: ContractType) =>
   ({
     "F.T": 100,
     "P.T": 50,
-    "Q.T": 30,
+    "Q.T": 25,
   }[contractType]);
 
 export const updateWorkLoadPersons = async (idPersonsTeam: string[]) => {
@@ -15,7 +15,6 @@ export const updateWorkLoadPersons = async (idPersonsTeam: string[]) => {
     $or
   }).populate({
     path: "persons",
-    // Get friends of friends - populate the 'friends' array for every friend
     populate: { path: "person" },
   });
   for (const idPerson of idPersonsTeam) {

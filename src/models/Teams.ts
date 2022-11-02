@@ -26,7 +26,7 @@ const personTeam = new Schema<{
   contractType: ContractType;
 }>(
   {
-    person: { type: Schema.Types.ObjectId, ref: PersonModel },
+    person: { type: Schema.Types.ObjectId, ref: "peoples" },
     contractType: String,
   },
   { _id: false }

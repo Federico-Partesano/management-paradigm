@@ -8,11 +8,16 @@ import { updateWorkLoadPersons } from "../utils/updateWorkLoadPerson";
 export const teamsController = {
   getTeams: async ({ query }: Request, res: Response) => {
     const { limit = "10", page = "1", search = "" } = query;
+
     const filterByString = search
       ? { $or: [{ name: { $regex: new RegExp(search as string, "i") } }] }
       : {};
     const teams = await TeamsModel.paginate(filterByString, {
-      populate: { path: "persons", populate: "person" },
+      populate: {
+        path: "persons.person",
+        model: "peoples",
+        populate: "skills",
+      },
       limit: +limit,
       page: +page,
     });
@@ -43,8 +48,11 @@ export const teamsController = {
   ) => {
     const { persons } = body;
     const currentTeam: Team<PostTeam> | null = await TeamsModel.findById(id);
-    if(!currentTeam) return res.status(404).json({message: "Team not found."})
-    const prevIdPersons = currentTeam.persons.map(({ person }) => person.toString())
+    if (!currentTeam)
+      return res.status(404).json({ message: "Team not found." });
+    const prevIdPersons = currentTeam.persons.map(({ person }) =>
+      person.toString()
+    );
     await TeamsModel.updateOne(
       { _id: id },
       {

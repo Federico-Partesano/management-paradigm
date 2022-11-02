@@ -30,8 +30,10 @@ export const personsController = {
     return res.json({ message: "Random persons inserted" });
   },
   getPersons: async ({ query }: Request, res: Response) => {
-    const { limit = "10", page = "1", search = "" } = query;
-    const filterByString = search
+    const { limit = "10", page = "1", search = "", workLoad, skills = [] } = query;
+    // const $or = (skills as string[]).map((id) => ({"skills": id}));
+
+    let filterByString: Record<string, any> = search
       ? {
           $or: [
             { name: { $regex: new RegExp(search as string, "i") } },
@@ -41,7 +43,11 @@ export const personsController = {
           ],
         }
       : {};
+
+    if (workLoad !== undefined)
+      filterByString["workLoad"] = { $lt: (+workLoad) + 1 };
     const persons = await PersonModel.paginate(filterByString, {
+      populate: "skills",
       limit: +limit,
       page: +page,
     });
