@@ -29,15 +29,40 @@ export const personsController = {
     await PersonModel.insertMany(array);
     return res.json({ message: "Random persons inserted" });
   },
-  getPersons: async ({ query }: Request, res: Response) => {
+  getPersons: async (
+    {
+      query,
+    }: Request<
+      {},
+      {},
+      {},
+      {
+        limit: string;
+        page: string;
+        search: string;
+        sort: string;
+        sector: string;
+        skills: string[];
+        "workload<": string;
+        "workload>": string;
+      }
+    >,
+    res: Response
+  ) => {
     const {
       limit = "10",
       page = "1",
       search = "",
       skills = [],
       sector = "",
+      sort = "",
     } = query;
     const $or = (skills as string[]).map((id) => ({ skills: id }));
+    let options: Record<string, any> = {
+      populate: ["skills", "sector"],
+      limit: +limit,
+      page: +page,
+    };
     let filterByString: Record<string, any> = search
       ? {
           $or: [
@@ -53,9 +78,16 @@ export const personsController = {
     if (sector) {
       filterByString["$or"] = [{ sector }, ...$or];
     }
-    // if (workLoad !== undefined)
-    //   filterByString["workLoad"] = { $lt: +workLoad + 1 };
+    if (sort && (sort.at(-1) === "<" || sort.at(-1) === ">")) {
+      const order = sort.at(-1) === "<" ? -1 : 1;
+      const keySort = sort.slice(0, -1);
+      options["sort"] = {
+        [keySort]: order,
+      };
+    }
     if (query["workload<"] !== undefined && query["workload>"] !== undefined) {
+      // if (workLoad !== undefined)
+      //   filterByString["workLoad"] = { $lt: +workLoad + 1 };
       filterByString["workLoad"] = {
         $gt: +query["workload>"] - 1,
         $lt: +query["workload<"] + 1,
@@ -72,11 +104,8 @@ export const personsController = {
         };
       }
     }
-    const persons = await PersonModel.paginate(filterByString, {
-      populate: ["skills", "sector"],
-      limit: +limit,
-      page: +page,
-    });
+
+    const persons = await PersonModel.paginate(filterByString, options);
     const populatePersonsWithTeams = await populateTeamsGetPersons(persons);
     return res.json(populatePersonsWithTeams);
   },
