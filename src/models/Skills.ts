@@ -3,12 +3,12 @@ import paginate from "mongoose-paginate-v2";
 import { Sector } from "./Sector";
 
 export interface Skill extends Document {
-  value: string
+  value: string;
 }
 
 export const skillSchema = new Schema<Skill>(
   {
-    value: String
+    value: { type: String, unique: true },
   },
   {
     versionKey: false,

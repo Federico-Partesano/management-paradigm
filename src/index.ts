@@ -4,6 +4,7 @@ import cors from "cors";
 import persons from "./routes/persons";
 import teams from "./routes/teams";
 import skills from "./routes/skills";
+import sectors from "./routes/sectors";
 import bodyParser from "body-parser";
 
 const port = process.env.PORT || 3005;
@@ -28,6 +29,7 @@ mongoose.connect(
 app.use("/persons", persons);
 app.use("/teams", teams);
 app.use("/skills", skills);
+app.use("/sectors", sectors);
 
 app.get("/test", async (req, res) => {
   res.json({ message: "ok" });

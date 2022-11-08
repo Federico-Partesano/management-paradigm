@@ -13,11 +13,11 @@ const {
   deleteTeam,
 } = teamsController;
 
-router.get("/", simulateLazy, getTeams);
-router.post("/", simulateLazy, checkAddTeam, checkErrorValidation, addNewTeam);
-router.post("/:id", simulateLazy, checkAddTeam, checkErrorValidation, editTeam);
-router.delete("/:id", simulateLazy, deleteTeam);
-router.get("/add", simulateLazy, addMoreTeams);
-router.get("/delete", simulateLazy, deleteAllTeams);
+router.get("/", getTeams);
+router.post("/", checkAddTeam, checkErrorValidation, addNewTeam);
+router.post("/:id", checkAddTeam, checkErrorValidation, editTeam);
+router.delete("/:id", deleteTeam);
+router.get("/add", addMoreTeams);
+router.get("/delete", deleteAllTeams);
 
 export default router;

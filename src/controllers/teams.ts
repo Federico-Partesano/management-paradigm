@@ -16,7 +16,7 @@ export const teamsController = {
       populate: {
         path: "persons.person",
         model: "peoples",
-        populate: "skills",
+        populate: ["skills", "sector"],
       },
       limit: +limit,
       page: +page,

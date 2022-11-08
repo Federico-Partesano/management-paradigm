@@ -30,23 +30,50 @@ export const personsController = {
     return res.json({ message: "Random persons inserted" });
   },
   getPersons: async ({ query }: Request, res: Response) => {
-    const { limit = "10", page = "1", search = "", workLoad, skills = [] } = query;
-    // const $or = (skills as string[]).map((id) => ({"skills": id}));
+    const {
+      limit = "10",
+      page = "1",
+      search = "",
+      skills = [],
+      sector = "",
+    } = query;
+    const $or = (skills as string[]).map((id) => ({ skills: id }));
     let filterByString: Record<string, any> = search
       ? {
           $or: [
             { name: { $regex: new RegExp(search as string, "i") } },
             { surname: { $regex: new RegExp(search as string, "i") } },
             { email: { $regex: new RegExp(search as string, "i") } },
-            { sector: { $regex: new RegExp(search as string, "i") } },
           ],
         }
       : {};
-
-    if (workLoad !== undefined)
-      filterByString["workLoad"] = { $lt: (+workLoad) + 1 };
+    if (skills.length) {
+      filterByString["$or"] = [...(filterByString?.["$or"] || []), ...$or];
+    }
+    if (sector) {
+      filterByString["$or"] = [{ sector }, ...$or];
+    }
+    // if (workLoad !== undefined)
+    //   filterByString["workLoad"] = { $lt: +workLoad + 1 };
+    if (query["workload<"] !== undefined && query["workload>"] !== undefined) {
+      filterByString["workLoad"] = {
+        $gt: +query["workload>"] - 1,
+        $lt: +query["workload<"] + 1,
+      };
+    } else {
+      if (query["workload>"] !== undefined) {
+        filterByString["workLoad"] = {
+          $gt: +query["workload>"] - 1,
+        };
+      }
+      if (query["workload<"] !== undefined) {
+        filterByString["workLoad"] = {
+          $lt: +query["workload<"] + 1,
+        };
+      }
+    }
     const persons = await PersonModel.paginate(filterByString, {
-      populate: "skills",
+      populate: ["skills", "sector"],
       limit: +limit,
       page: +page,
     });

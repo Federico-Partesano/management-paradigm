@@ -15,9 +15,9 @@ export const personSchema = new Schema<Person>(
   {
     name: String,
     surname: String,
-    email: String,
+    email: { type: String, unique: true },
     skills: [{ type: Schema.Types.ObjectId, ref: "skills" }],
-    sector: String,
+    sector: { type: Schema.Types.ObjectId, ref: "sectors" },
     workLoad: Number,
   },
   {

@@ -1,41 +1,42 @@
 import { Request, Response } from "express";
 import { Person, PersonModel } from "../models/Person";
+import { SectorModel } from "../models/Sector";
 import { SkillModel } from "../models/Skills";
 import { getRandomData } from "../utils/getRandomDataMock";
 import { populateTeamsGetPersons } from "../utils/populateTeamsGetPersons";
 
-export const skillsController = {
-  getSkills: async ({ query }: Request, res: Response) => {
+export const sectorsController = {
+  getSectors: async ({ query }: Request, res: Response) => {
     const isPaginate = query?.page !== undefined && query?.limit !== undefined;
     if (isPaginate) {
       const { limit = "10", page = "1" } = query;
-      const skills = await SkillModel.paginate(undefined, {
+      const skills = await SectorModel.paginate(undefined, {
         limit: +limit,
         page: +page,
       });
       return res.json(skills);
     }
-    const skills = await SkillModel.find();
+    const skills = await SectorModel.find();
     return res.json(skills);
   },
-  addNewSkill: async (
+  addNewSector: async (
     { body: { value } }: Request<{}, {}, { value: string }>,
     res: Response
   ) => {
-    const { length } = await SkillModel.find({ value });
+    const { length } = await SectorModel.find({ value });
     if (length)
-      return res.status(404).json({ message: "Error skill already exist" });
-    const skill = await SkillModel.create({ value });
-    return res.json({ _id: skill._id, value: skill.value });
+      return res.status(404).json({ message: "Error sector already exist" });
+    const { _id, value: valueSector } = await SectorModel.create({ value });
+    return res.json({ _id, value: valueSector });
   },
-  deleteSkill: async ({ params: { id: _id } }: Request, res: Response) => {
-    const { deletedCount } = await SkillModel.deleteOne({ _id });
+  deleteSector: async ({ params: { id: _id } }: Request, res: Response) => {
+    const { deletedCount } = await SectorModel.deleteOne({ _id });
     return deletedCount > 0
       ? res.json({ message: "Successfully removed" })
       : res.status(404).json({ message: "Item not found" });
   },
-  editSkill: async ({ params: { id: _id }, body }: Request, res: Response) => {
-    await SkillModel.updateOne(
+  editSector: async ({ params: { id: _id }, body }: Request, res: Response) => {
+    await SectorModel.updateOne(
       { _id },
       {
         $set: {

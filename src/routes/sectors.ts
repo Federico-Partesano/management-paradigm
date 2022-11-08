@@ -1,20 +1,22 @@
 import express from "express";
 import { body } from "express-validator";
+import { sectorsController } from "../controllers/sectors";
 import { skillsController } from "../controllers/skills";
 import { checkAddSkill } from "../middlewares/checkAddSkill";
 import { checkErrorValidation } from "../middlewares/checkErrorValidation";
 import { simulateLazy } from "../middlewares/simulateLazy";
 const router = express.Router();
-const { getSkills, addNewSkill, deleteSkill, editSkill } = skillsController;
+const { getSectors, addNewSector, deleteSector, editSector } =
+  sectorsController;
 
-router.get("/", getSkills);
-router.post("/", checkAddSkill, checkErrorValidation, addNewSkill);
-router.delete("/:id", deleteSkill);
+router.get("/", getSectors);
+router.post("/", checkAddSkill, checkErrorValidation, addNewSector);
+router.delete("/:id", deleteSector);
 router.post(
   "/:id",
   body("value").exists().notEmpty().isString(),
   checkErrorValidation,
-  editSkill
+  editSector
 );
 
 export default router;

@@ -2,7 +2,10 @@ import express from "express";
 import { personsController } from "../controllers/persons";
 import { checkAddPerson } from "../middlewares/checkAddPerson";
 import { checkErrorValidation } from "../middlewares/checkErrorValidation";
+import { isDuplicateEmail } from "../middlewares/isDuplicateEmail";
+import { isValidSkills } from "../middlewares/isValidSkills";
 import { simulateLazy } from "../middlewares/simulateLazy";
+import { isValidSector } from "../middlewares/validSector";
 import { mongoIdValidator } from "../utils/validMongoId";
 const router = express.Router();
 const {
@@ -16,24 +19,29 @@ const {
 
 router.post(
   "/",
-  simulateLazy,
+
   checkAddPerson,
+  isValidSector,
+  isValidSkills,
+  isDuplicateEmail,
   checkErrorValidation,
   addNewPerson
 );
 router.patch(
   "/:id",
-  simulateLazy,
+
   checkAddPerson,
+  isValidSector,
+  isValidSkills,
   checkErrorValidation,
   editPerson
 );
-router.get("/", simulateLazy, getPersons);
-router.get("/add", simulateLazy, addMorePersons);
-router.get("/delete", simulateLazy, deletePersons);
+router.get("/", getPersons);
+router.get("/add", addMorePersons);
+router.get("/delete", deletePersons);
 router.delete(
   "/:id",
-  simulateLazy,
+
   mongoIdValidator("id"),
   checkErrorValidation,
   deletePerson
