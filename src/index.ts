@@ -49,6 +49,13 @@ app.get("/test", async (req, res) => {
   })
   res.json({ message: "ok" });
 });
+app.get("/migration", async (req, res) => {
+const t = await PersonModel.find();
+t.forEach((person) => {
+  (person.businessUnit as any) = "637b44496d36e3e34f0f7d19";
+  person.save();
+})
+});
 
 app.listen(port, () => console.log("Server is running"));
 

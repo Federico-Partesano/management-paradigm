@@ -3,7 +3,7 @@ import { validateEmail } from "../utils/email";
 
 export const checkAddTeam = [
   body("name").notEmpty(),
-  body("description").exists(),
+  body("description").exists().isString(),
   body("startDate").notEmpty().isNumeric(),
   body("endDate").exists().isNumeric().optional({nullable: true}),
   body("persons")
