@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { Person, PersonModel } from "../models/Person";
-import { SectorModel } from "../models/Sector";
-import { validateEmail } from "../utils/email";
 
 export const isDuplicateEmail = async (
   { body: { email } }: Request<{}, {}, { email: string }>,

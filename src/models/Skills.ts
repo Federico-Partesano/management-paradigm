@@ -1,14 +1,13 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import paginate from "mongoose-paginate-v2";
-import { Sector } from "./Sector";
 
 export interface Skill extends Document {
-  value: string;
+  name: string;
 }
 
 export const skillSchema = new Schema<Skill>(
   {
-    value: { type: String, unique: true },
+    name: { type: String, unique: true },
   },
   {
     versionKey: false,
@@ -16,9 +15,9 @@ export const skillSchema = new Schema<Skill>(
 );
 skillSchema.plugin(paginate);
 
-interface InstitutionDocument extends mongoose.Document, Skill {}
+export interface InstitutionDocumentSkill extends mongoose.Document, Skill {}
 
 export const SkillModel = model<
-  InstitutionDocument,
-  mongoose.PaginateModel<InstitutionDocument>
+  InstitutionDocumentSkill,
+  mongoose.PaginateModel<InstitutionDocumentSkill>
 >("skills", skillSchema);

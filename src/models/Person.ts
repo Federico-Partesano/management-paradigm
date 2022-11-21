@@ -1,13 +1,15 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import paginate from "mongoose-paginate-v2";
-import { Sector } from "./Sector";
+import { BusinessUnit } from "./BusinessUnit";
+import { Position } from "./Position";
 
-export interface Person extends Document {
+export interface Person<T extends Position | string = Position, K extends BusinessUnit | string = BusinessUnit> extends Document {
   name: string;
   surname: string;
   email: string;
   skills: string[];
-  sector: Sector;
+  positions: T[];
+  businessUnit: K;
   workLoad: number;
 }
 
@@ -16,8 +18,9 @@ export const personSchema = new Schema<Person>(
     name: String,
     surname: String,
     email: { type: String, unique: true },
+    businessUnit: { type: Schema.Types.ObjectId, ref: "businessunits" },
     skills: [{ type: Schema.Types.ObjectId, ref: "skills" }],
-    sector: { type: Schema.Types.ObjectId, ref: "sectors" },
+    positions: [{ type: Schema.Types.ObjectId, ref: "positions" }],
     workLoad: Number,
   },
   {
@@ -26,9 +29,9 @@ export const personSchema = new Schema<Person>(
 );
 personSchema.plugin(paginate);
 
-interface InstitutionDocument extends mongoose.Document, Person {}
+export interface InstitutionDocumentPerson extends mongoose.Document, Person {}
 
 export const PersonModel = model<
-  InstitutionDocument,
-  mongoose.PaginateModel<InstitutionDocument>
+  InstitutionDocumentPerson,
+  mongoose.PaginateModel<InstitutionDocumentPerson>
 >("peoples", personSchema);

@@ -7,19 +7,22 @@ import { updateWorkLoadPersons } from "../utils/updateWorkLoadPerson";
 
 export const teamsController = {
   getTeams: async ({ query }: Request, res: Response) => {
-    const { limit = "10", page = "1", search = "" } = query;
+    const { limit = "10", page = "1", name = "" } = query;
+    const { sort, filter } = res.locals;
 
-    const filterByString = search
-      ? { $or: [{ name: { $regex: new RegExp(search as string, "i") } }] }
-      : {};
+    const filterByString = name
+      ? { ...filter, name: { $regex: new RegExp(name as string, "i") } }
+      : {...filter};
     const teams = await TeamsModel.paginate(filterByString, {
       populate: {
         path: "persons.person",
         model: "peoples",
-        populate: ["skills", "sector"],
+        populate: ["skills", "positions"],
       },
       limit: +limit,
       page: +page,
+      collation: { locale: "en" },
+      sort: { name: 1, ...sort },
     });
     return res.json(teams);
   },
@@ -46,6 +49,7 @@ export const teamsController = {
     { body, params: { id } }: Request<{ id: string }, {}, Team<PostTeam>>,
     res: Response
   ) => {
+    console.log("🚀 ~ file: teamsController.ts ~ line 50 ~ body", body);
     const { persons } = body;
     const currentTeam: Team<PostTeam> | null = await TeamsModel.findById(id);
     if (!currentTeam)

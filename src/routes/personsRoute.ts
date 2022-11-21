@@ -1,13 +1,14 @@
-import express from "express";
-import { personsController } from "../controllers/persons";
+import { Router } from "express";
+import { personsController } from "../controllers/personsController";
 import { checkAddPerson } from "../middlewares/checkAddPerson";
+import { checkDuplicateBody } from "../middlewares/checkDuplicateBody";
 import { checkErrorValidation } from "../middlewares/checkErrorValidation";
-import { isDuplicateEmail } from "../middlewares/isDuplicateEmail";
-import { isValidSkills } from "../middlewares/isValidSkills";
-import { simulateLazy } from "../middlewares/simulateLazy";
+import { isValidSkillsAndPositions } from "../middlewares/isValidSkillsAndPositions";
+import { queryParser } from "../middlewares/queryParser";
 import { isValidSector } from "../middlewares/validSector";
+import { PersonModel } from "../models/Person";
 import { mongoIdValidator } from "../utils/validMongoId";
-const router = express.Router();
+const router = Router();
 const {
   addNewPerson,
   getPersons,
@@ -17,31 +18,26 @@ const {
   deletePersons,
 } = personsController;
 
-router.post(
+router.put(
   "/",
-
   checkAddPerson,
-  isValidSector,
-  isValidSkills,
-  isDuplicateEmail,
   checkErrorValidation,
+  isValidSkillsAndPositions,
+  checkDuplicateBody(PersonModel, "email", "email", true),
   addNewPerson
 );
-router.patch(
+router.post(
   "/:id",
-
   checkAddPerson,
-  isValidSector,
-  isValidSkills,
+  isValidSkillsAndPositions,
   checkErrorValidation,
   editPerson
 );
-router.get("/", getPersons);
+router.get("/", queryParser, getPersons);
 router.get("/add", addMorePersons);
 router.get("/delete", deletePersons);
 router.delete(
   "/:id",
-
   mongoIdValidator("id"),
   checkErrorValidation,
   deletePerson

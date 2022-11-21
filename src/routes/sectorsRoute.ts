@@ -1,7 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
-import { sectorsController } from "../controllers/sectors";
-import { skillsController } from "../controllers/skills";
+import { sectorsController } from "../controllers/sectorsController";
+import { skillsController } from "../controllers/skillsController";
 import { checkAddSkill } from "../middlewares/checkAddSkill";
 import { checkErrorValidation } from "../middlewares/checkErrorValidation";
 import { simulateLazy } from "../middlewares/simulateLazy";

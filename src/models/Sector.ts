@@ -2,12 +2,12 @@ import mongoose, { model, Schema } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 
 export interface Sector extends Document {
-  value: string;
+  name: string;
 }
 
 export const sectorSchema = new Schema<Sector>(
   {
-    value: { type: String, unique: true },
+    name: { type: String, unique: true },
   },
   {
     versionKey: false,

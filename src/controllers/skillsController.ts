@@ -1,36 +1,26 @@
 import { Request, Response } from "express";
 import { Person, PersonModel } from "../models/Person";
 import { SkillModel } from "../models/Skills";
+import { objRemoveUndefinedKeys } from "../utils/genericFunctions";
 import { getRandomData } from "../utils/getRandomDataMock";
 import { populateTeamsGetPersons } from "../utils/populateTeamsGetPersons";
 
 export const skillsController = {
   getSkills: async ({ query }: Request, res: Response) => {
-    const isPaginate = query?.page !== undefined && query?.limit !== undefined;
-    if (isPaginate) {
-      const { limit = "10", page = "1" } = query;
-      const skills = await SkillModel.paginate(undefined, {
-        limit: +limit,
-        page: +page,
-      });
-      return res.json(skills);
-    }
-    const skills = await SkillModel.find();
+    const { search: name } = query;
+    const skills = await SkillModel.find(objRemoveUndefinedKeys({ name }));
     return res.json(skills);
   },
   addNewSkill: async (
-    { body: { value } }: Request<{}, {}, { value: string }>,
+    { body: { name } }: Request<{}, {}, { name: string }>,
     res: Response
   ) => {
-    const { length } = await SkillModel.find({ value });
-    if (length)
-      return res.status(404).json({ message: "Error skill already exist" });
-    const skill = await SkillModel.create({ value });
-    return res.json({ _id: skill._id, value: skill.value });
+    const skill = await SkillModel.create({ name });
+    return res.json({ _id: skill._id, value: skill.name });
   },
   deleteSkill: async ({ params: { id: _id } }: Request, res: Response) => {
     const { deletedCount } = await SkillModel.deleteOne({ _id });
-    return deletedCount > 0
+    return deletedCount
       ? res.json({ message: "Successfully removed" })
       : res.status(404).json({ message: "Item not found" });
   },

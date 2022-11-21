@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Person } from "../models/Person";
 import { SectorModel } from "../models/Sector";
-import { validateEmail } from "../utils/email";
 
 export const isValidSector = async (
   { body: { sector } }: Request,

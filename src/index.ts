@@ -1,13 +1,19 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import persons from "./routes/persons";
-import teams from "./routes/teams";
-import skills from "./routes/skills";
-import sectors from "./routes/sectors";
+import persons from "./routes/personsRoute";
+import teams from "./routes/teamsRoute";
+import skills from "./routes/skillsRoute";
+import sectors from "./routes/sectorsRoute";
+import businessUnit from "./routes/businessUnitRoute";
+import positions from "./routes/positionsRoute";
 import bodyParser from "body-parser";
+import { MongooseQueryParser } from 'mongoose-query-parser';
+import { PersonModel } from "./models/Person";
+import { simulateLazy } from "./middlewares/simulateLazy";
 
 const port = process.env.PORT || 3005;
+export const parser = new MongooseQueryParser();
 
 const app = express();
 app.use(
@@ -26,12 +32,21 @@ mongoose.connect(
   }
 );
 
+app.use(simulateLazy)
+
 app.use("/persons", persons);
-app.use("/teams", teams);
+app.use("/projects", teams);
 app.use("/skills", skills);
 app.use("/sectors", sectors);
+app.use("/businessunits", businessUnit);
+app.use("/positions", positions);
 
 app.get("/test", async (req, res) => {
+  const t = await PersonModel.find();
+  t.map((person) =>{
+    (person.businessUnit as any) = "636ce3731cb2b2f192223b08";
+    person.save();
+  })
   res.json({ message: "ok" });
 });
 

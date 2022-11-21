@@ -1,8 +1,7 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 import { ContractType } from "./ContractType";
-import { Person, PersonModel, personSchema } from "./Person";
-import { Sector } from "./Sector";
+import { Person } from "./Person";
 
 export interface PostTeam {
   person: string;
@@ -46,9 +45,9 @@ const teamSchema = new Schema<Team>(
 );
 teamSchema.plugin(paginate);
 
-export interface InstitutionDocument extends mongoose.Document, Team {}
+export interface InstitutionDocumentTeam extends mongoose.Document, Team {}
 
 export const TeamsModel = model<
-  InstitutionDocument,
-  mongoose.PaginateModel<InstitutionDocument>
+  InstitutionDocumentTeam,
+  mongoose.PaginateModel<InstitutionDocumentTeam>
 >("projects", teamSchema);
