@@ -4,7 +4,6 @@ import cors from "cors";
 import persons from "./routes/personsRoute";
 import teams from "./routes/teamsRoute";
 import skills from "./routes/skillsRoute";
-import sectors from "./routes/sectorsRoute";
 import businessUnit from "./routes/businessUnitRoute";
 import positions from "./routes/positionsRoute";
 import bodyParser from "body-parser";
@@ -26,7 +25,7 @@ app.use(cors());
 app.options("*", cors() as any);
 
 mongoose.connect(
-  process.env.MONGDB_URI || "mongodb://localhost:27017/paradigma",
+  "mongodb://localhost:27017/paradigma",
   (err) => {
     console.log(!err ? "Succefully connection" : "Db error");
   }
@@ -37,7 +36,6 @@ app.use(simulateLazy)
 app.use("/persons", persons);
 app.use("/projects", teams);
 app.use("/skills", skills);
-app.use("/sectors", sectors);
 app.use("/businessunits", businessUnit);
 app.use("/positions", positions);
 
@@ -49,13 +47,7 @@ app.get("/test", async (req, res) => {
   })
   res.json({ message: "ok" });
 });
-app.get("/migration", async (req, res) => {
-const t = await PersonModel.find();
-t.forEach((person) => {
-  (person.businessUnit as any) = "637b44496d36e3e34f0f7d19";
-  person.save();
-})
-});
+
 
 app.listen(port, () => console.log("Server is running"));
 

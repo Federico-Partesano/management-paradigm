@@ -6,12 +6,15 @@ import { objRemoveUndefinedKeys } from "../utils/genericFunctions";
 export const positionsController = {
   getPositions: async ({ query }: Request, res: Response) => {
     const { search, businessUnit } = query;
+    const filterBusinessUnit = Array.isArray(businessUnit)
+      ? { $or: businessUnit.map((item) => ({ businessUnit: item })) }
+      : { businessUnit };
     const positions = await PositionModel.find(
       objRemoveUndefinedKeys({
         name: search
           ? { $regex: new RegExp(search as string, "i") }
           : undefined,
-        businessUnit,
+        ...filterBusinessUnit,
       })
     ).populate("businessUnit");
     return res.json(positions);

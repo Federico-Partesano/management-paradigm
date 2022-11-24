@@ -6,10 +6,10 @@ export const isRunningOnAtlas = () =>
 
 const dbUrl = isRunningOnAtlas()
   ? String(process.env.MONGDB_URI)
-  : "mongodb://localhost:27017/paradigma";
+  : "mongodb+srv://test:fnT3WtRqkD2ljAjK@cluster0.r5qez.mongodb.net/?retryWrites=true&w=majority";
 
 export const dbConnection = () => {
-  // Logger.info(`Attempting to connect to ${dbUrl}`);
+  console.log(`Attempting to connect to ${dbUrl}`);
   return mongoose.connect(dbUrl, {
     serverSelectionTimeoutMS: 10000,
     maxPoolSize: process.env.NODE_ENV === "production" ? 10 : 5,

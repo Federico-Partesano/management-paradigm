@@ -50,6 +50,8 @@ export const personsController = {
   },
   getPersons: async ({ query, url }: Request, res: Response) => {
     const { sort, filter } = res.locals;
+    // console.log("🚀 ~ file: personsController.ts ~ line 53 ~ getPersons: ~ filter", filter?.["$or"] )
+    delete filter.search;
     const { limit = "10", page = "1", search = "" } = query;
     // const $or = (skills as string[]).map((id) => ({ skills: id }));
     let options: Record<string, any> = {
@@ -67,8 +69,14 @@ export const personsController = {
           ],
         }
       : {};
+      if(filter?.["$or"] && filter?.["$or"]?.length) {
+       filterByString = { $or: [
+         ...(filter?.["$or"] || []),
+        ]
+      }
+    }
     const persons = await PersonModel.paginate(
-      { ...filterByString, ...filter },
+      {...filter,  ...filterByString },
       { sort, ...options}
     );
     const populatePersonsWithTeams = await populateTeamsGetPersons(persons);

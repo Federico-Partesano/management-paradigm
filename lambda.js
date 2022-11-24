@@ -20,8 +20,7 @@ export function handler(event, context, callback) {
         proxy(server, event, context);
       })
       .catch((error) => {
-        Logger.error(`Could not connect to database with error ${error}`)
-        console.log("Connected to database.");
+        console.error(`Could not connect to database with error ${error}`)
       }
       );
   }

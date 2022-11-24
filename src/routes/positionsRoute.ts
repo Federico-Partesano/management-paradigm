@@ -3,6 +3,7 @@ import { body, param } from "express-validator";
 import { positionsController } from "../controllers/positionsController";
 import { checkDuplicateBody } from "../middlewares/checkDuplicateBody";
 import { checkErrorValidation } from "../middlewares/checkErrorValidation";
+import { queryParser } from "../middlewares/queryParser";
 import { PositionModel } from "../models/Position";
 import { mongoIdValidator } from "../utils/validMongoId";
 
@@ -20,6 +21,7 @@ router.get(
   param("businessUnit").optional().isMongoId(),
   param("search").optional().isString(),
   checkErrorValidation,
+  queryParser,
   getPositions
 );
 router.get("/:id", mongoIdValidator("id"), checkErrorValidation, getPosition);

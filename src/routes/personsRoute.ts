@@ -5,7 +5,6 @@ import { checkDuplicateBody } from "../middlewares/checkDuplicateBody";
 import { checkErrorValidation } from "../middlewares/checkErrorValidation";
 import { isValidSkillsAndPositions } from "../middlewares/isValidSkillsAndPositions";
 import { queryParser } from "../middlewares/queryParser";
-import { isValidSector } from "../middlewares/validSector";
 import { PersonModel } from "../models/Person";
 import { mongoIdValidator } from "../utils/validMongoId";
 const router = Router();
