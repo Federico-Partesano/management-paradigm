@@ -11,6 +11,8 @@ export interface Person<T extends Position | string = Position, K extends Busine
   positions: T[];
   businessUnit: K;
   workLoad: number;
+  PO: boolean;
+  SM: boolean;
 }
 
 export const personSchema = new Schema<Person>(
@@ -22,6 +24,8 @@ export const personSchema = new Schema<Person>(
     skills: [{ type: Schema.Types.ObjectId, ref: "skills" }],
     positions: [{ type: Schema.Types.ObjectId, ref: "positions" }],
     workLoad: Number,
+    PO: Boolean,
+    SM: Boolean,
   },
   {
     versionKey: false,

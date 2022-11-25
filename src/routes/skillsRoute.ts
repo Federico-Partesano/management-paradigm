@@ -4,6 +4,7 @@ import { skillsController } from "../controllers/skillsController";
 import { checkAddSkill } from "../middlewares/checkAddSkill";
 import { checkDuplicateBody } from "../middlewares/checkDuplicateBody";
 import { checkErrorValidation } from "../middlewares/checkErrorValidation";
+import { queryParser } from "../middlewares/queryParser";
 import { simulateLazy } from "../middlewares/simulateLazy";
 import { SkillModel } from "../models/Skills";
 import { mongoIdValidator } from "../utils/validMongoId";
@@ -14,6 +15,7 @@ router.get(
   "/",
   param("search").optional().isString(),
   checkErrorValidation,
+  queryParser,
   getSkills
 );
 router.put(

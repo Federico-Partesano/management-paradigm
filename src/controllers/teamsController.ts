@@ -12,13 +12,19 @@ export const teamsController = {
 
     const filterByString = name
       ? { ...filter, name: { $regex: new RegExp(name as string, "i") } }
-      : {...filter};
+      : { ...filter };
     const teams = await TeamsModel.paginate(filterByString, {
-      populate: {
-        path: "persons.person",
-        model: "peoples",
-        populate: ["skills", "positions"],
-      },
+      populate: [
+        {
+          path: "persons.person",
+          model: "peoples",
+          populate: ["skills", "positions"],
+        },
+        {
+          path: "PO",
+        },
+        { path: "SM" },
+      ],
       limit: +limit,
       page: +page,
       collation: { locale: "en" },
@@ -49,7 +55,6 @@ export const teamsController = {
     { body, params: { id } }: Request<{ id: string }, {}, Team<PostTeam>>,
     res: Response
   ) => {
-    console.log("🚀 ~ file: teamsController.ts ~ line 50 ~ body", body);
     const { persons } = body;
     const currentTeam: Team<PostTeam> | null = await TeamsModel.findById(id);
     if (!currentTeam)

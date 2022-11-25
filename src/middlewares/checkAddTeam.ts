@@ -5,6 +5,7 @@ export const checkAddTeam = [
   body("name").notEmpty(),
   body("description").exists().isString(),
   body("startDate").notEmpty().isNumeric(),
+  body(["PO", "SM"]).optional({nullable: true}).isMongoId(),
   body("endDate").exists().isNumeric().optional({nullable: true}),
   body("persons")
     .isArray()

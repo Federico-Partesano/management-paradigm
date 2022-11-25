@@ -18,6 +18,8 @@ export interface Team<T extends PersonTeam | PostTeam = PersonTeam>
   persons: T[];
   startDate: number;
   endDate: number | null;
+  PO: string | null;
+  SM: string | null;
 }
 
 const personTeam = new Schema<{
@@ -36,6 +38,8 @@ const teamSchema = new Schema<Team>(
     name: String,
     description: String,
     persons: [personTeam],
+    PO: {type: Schema.Types.ObjectId, ref: "peoples"},
+    SM: {type: Schema.Types.ObjectId, ref: "peoples"},
     startDate: Number,
     endDate: Number,
   },

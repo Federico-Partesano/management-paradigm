@@ -10,6 +10,7 @@ import bodyParser from "body-parser";
 import { MongooseQueryParser } from 'mongoose-query-parser';
 import { PersonModel } from "./models/Person";
 import { simulateLazy } from "./middlewares/simulateLazy";
+import { TeamsModel } from "./models/Teams";
 
 const port = process.env.PORT || 3005;
 export const parser = new MongooseQueryParser();
@@ -40,11 +41,12 @@ app.use("/businessunits", businessUnit);
 app.use("/positions", positions);
 
 app.get("/test", async (req, res) => {
-  const t = await PersonModel.find();
-  t.map((person) =>{
-    (person.businessUnit as any) = "636ce3731cb2b2f192223b08";
-    person.save();
-  })
+  // const t = await TeamsModel.find();
+  // t.map((team) =>{
+  //   (team.PO as any) = null;
+  //   (team.SM as any) = null;
+  //   team.save();
+  // })
   res.json({ message: "ok" });
 });
 
