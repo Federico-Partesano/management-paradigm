@@ -14,6 +14,7 @@ export const updateWorkLoadPersons = async (idPersonsTeam: string[]) => {
   if (!$or.length) return;
   const teams = await TeamsModel.find({
     $or,
+    isActive: true
   }).populate({
     path: "persons",
     populate: { path: "person" },

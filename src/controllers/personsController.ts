@@ -5,17 +5,6 @@ import { getRandomArbitrary } from "../utils/genericFunctions";
 import { getRandomData } from "../utils/getRandomDataMock";
 import { populateTeamsGetPersons } from "../utils/populateTeamsGetPersons";
 
-interface QueryGetPersons {
-  limit: string;
-  page: string;
-  search: string;
-  sort: string;
-  sector: string;
-  skills: string[];
-  "workload<": string;
-  "workload>": string;
-}
-
 export const personsController = {
   addNewPerson: async (
     { body }: Request<{}, {}, Person<string, string>>,
@@ -50,15 +39,8 @@ export const personsController = {
   },
   getPersons: async ({ query, url }: Request, res: Response) => {
     const { sort, filter } = res.locals;
-    // console.log("🚀 ~ file: personsController.ts ~ line 53 ~ getPersons: ~ filter", filter?.["$or"] )
     delete filter.search;
     const { limit = "10", page = "1", search = "" } = query;
-    // const $or = (skills as string[]).map((id) => ({ skills: id }));
-    let options: Record<string, any> = {
-      populate: ["businessUnit", "positions", "skills"],
-      limit: +limit,
-      page: +page,
-    };
     let filterByString: Record<string, any> = search
       ? {
           $or: [
@@ -75,10 +57,10 @@ export const personsController = {
         ]
       }
     }
-    const persons = await PersonModel.paginate(
-      {...filter,  ...filterByString },
-      { sort, ...options}
-    );
+    const persons = await PersonModel.find(
+      {...filter,  ...filterByString,
+       sort}
+    ).populate(["businessUnit", "positions", "skills"],);
     const populatePersonsWithTeams = await populateTeamsGetPersons(persons);
     return res.json(populatePersonsWithTeams);
   },

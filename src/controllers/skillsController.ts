@@ -8,7 +8,6 @@ import { populateTeamsGetPersons } from "../utils/populateTeamsGetPersons";
 export const skillsController = {
   getSkills: async ({ query }: Request, res: Response) => {
     const { sort, filter } = res.locals;
-    console.log("🚀 ~ file: skillsController.ts ~ line 11 ~ getSkills: ~ filter", filter)
     const skills = await SkillModel.find(objRemoveUndefinedKeys({ ...filter }));
     return res.json(skills);
   },

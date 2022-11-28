@@ -26,7 +26,7 @@ app.use(cors());
 app.options("*", cors() as any);
 
 mongoose.connect(
-  "mongodb://localhost:27017/paradigma",
+  process.env.MONGDB_URI || "mongodb://localhost:27017/paradigma",
   (err) => {
     console.log(!err ? "Succefully connection" : "Db error");
   }
@@ -43,8 +43,7 @@ app.use("/positions", positions);
 app.get("/test", async (req, res) => {
   // const t = await TeamsModel.find();
   // t.map((team) =>{
-  //   (team.PO as any) = null;
-  //   (team.SM as any) = null;
+  //   (team.isActive as any) = true;
   //   team.save();
   // })
   res.json({ message: "ok" });

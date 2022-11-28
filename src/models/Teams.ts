@@ -20,6 +20,7 @@ export interface Team<T extends PersonTeam | PostTeam = PersonTeam>
   endDate: number | null;
   PO: string | null;
   SM: string | null;
+  isActive: boolean;
 }
 
 const personTeam = new Schema<{
@@ -42,6 +43,7 @@ const teamSchema = new Schema<Team>(
     SM: {type: Schema.Types.ObjectId, ref: "peoples"},
     startDate: Number,
     endDate: Number,
+    isActive: Boolean,
   },
   {
     versionKey: false,
