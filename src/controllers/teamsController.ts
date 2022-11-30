@@ -28,7 +28,7 @@ export const teamsController = {
       limit: +limit,
       page: +page,
       collation: { locale: "en" },
-      sort: { name: 1, ...sort },
+      sort: { createdAt: 1, ...sort },
     });
     return res.json(teams);
   },
@@ -36,7 +36,7 @@ export const teamsController = {
     { body }: Request<{}, {}, Team<PostTeam>>,
     res: Response
   ) => {
-    await TeamsModel.insertMany([{ ...body }]);
+    await TeamsModel.create({ ...body });
     updateWorkLoadPersons(body.persons.map(({ person }) => person));
     return res.json({ message: "ok" });
   },

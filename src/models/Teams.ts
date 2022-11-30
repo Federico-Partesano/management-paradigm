@@ -21,6 +21,7 @@ export interface Team<T extends PersonTeam | PostTeam = PersonTeam>
   PO: string | null;
   SM: string | null;
   isActive: boolean;
+  createdAt: number;
 }
 
 const personTeam = new Schema<{
@@ -39,14 +40,15 @@ const teamSchema = new Schema<Team>(
     name: String,
     description: String,
     persons: [personTeam],
-    PO: {type: Schema.Types.ObjectId, ref: "peoples"},
-    SM: {type: Schema.Types.ObjectId, ref: "peoples"},
+    PO: { type: Schema.Types.ObjectId, ref: "peoples" },
+    SM: { type: Schema.Types.ObjectId, ref: "peoples" },
     startDate: Number,
     endDate: Number,
     isActive: Boolean,
   },
   {
     versionKey: false,
+    timestamps: true
   }
 );
 teamSchema.plugin(paginate);

@@ -8,7 +8,7 @@ import { populateTeamsGetPersons } from "../utils/populateTeamsGetPersons";
 export const skillsController = {
   getSkills: async ({ query }: Request, res: Response) => {
     const { sort, filter } = res.locals;
-    const skills = await SkillModel.find(objRemoveUndefinedKeys({ ...filter }));
+    const skills = await SkillModel.find(objRemoveUndefinedKeys(filter));
     return res.json(skills);
   },
   addNewSkill: async (

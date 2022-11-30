@@ -22,15 +22,13 @@ export const businessUnitController = {
       : res.status(404).json({ message: "Position not found" });
   },
   editBusinessUnit: async (
-    { body, params: { id: _id } }: Request,
+    { body: $set, params: { id: _id } }: Request,
     res: Response
   ) => {
     const newBusinessUnit = await BusinessUnitModel.updateOne(
       { _id },
       {
-        $set: {
-          ...body,
-        },
+        $set
       }
     );
     return res.json({ ...newBusinessUnit });

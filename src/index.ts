@@ -4,6 +4,7 @@ import cors from "cors";
 import persons from "./routes/personsRoute";
 import teams from "./routes/teamsRoute";
 import skills from "./routes/skillsRoute";
+import historyProject from "./routes/historyProjectsRoute";
 import businessUnit from "./routes/businessUnitRoute";
 import positions from "./routes/positionsRoute";
 import bodyParser from "body-parser";
@@ -11,7 +12,6 @@ import { MongooseQueryParser } from 'mongoose-query-parser';
 import { PersonModel } from "./models/Person";
 import { simulateLazy } from "./middlewares/simulateLazy";
 import { TeamsModel } from "./models/Teams";
-
 const port = process.env.PORT || 3005;
 export const parser = new MongooseQueryParser();
 
@@ -32,20 +32,19 @@ mongoose.connect(
   }
 );
 
-app.use(simulateLazy)
+// app.use(simulateLazy)
 
 app.use("/persons", persons);
 app.use("/projects", teams);
 app.use("/skills", skills);
 app.use("/businessunits", businessUnit);
 app.use("/positions", positions);
+app.use("/historyprojects", historyProject);
 
 app.get("/test", async (req, res) => {
-  // const t = await TeamsModel.find();
-  // t.map((team) =>{
-  //   (team.isActive as any) = true;
-  //   team.save();
-  // })
+  fetch('https://pokeapi.co/api/v2/pokemon/ditto')
+  .then((response) => res.json({pokemons: {pokemons: {pokemons: {pokemons: response.json()}}}}))
+  .then((data) => res.status(400).json({message: "Coglione"}));
   res.json({ message: "ok" });
 });
 

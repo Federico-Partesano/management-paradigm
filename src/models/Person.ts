@@ -13,6 +13,9 @@ export interface Person<T extends Position | string = Position, K extends Busine
   workLoad: number;
   PO: boolean;
   SM: boolean;
+  isActive: boolean;
+  createdAt: number;
+  updateAt: number;
 }
 
 export const personSchema = new Schema<Person>(
@@ -26,9 +29,11 @@ export const personSchema = new Schema<Person>(
     workLoad: Number,
     PO: Boolean,
     SM: Boolean,
+    isActive: Boolean
   },
   {
     versionKey: false,
+    timestamps: true
   }
 );
 personSchema.plugin(paginate);

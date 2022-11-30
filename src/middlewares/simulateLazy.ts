@@ -10,5 +10,5 @@ export const simulateLazy = (
 ): void => {
   setTimeout(() => {
     next();
-  }, getRandomArbitraryInt(300, 600));
+  }, getRandomArbitraryInt(400, 600));
 };

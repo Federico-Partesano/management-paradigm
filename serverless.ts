@@ -1,5 +1,5 @@
 import type { Serverless } from "serverless/aws";
-const projectName = "managerial-paradigma";
+const projectName = "peoples";
 const accountId = "477918702832";
 const region = "eu-west-1";
 const layerName = "serverLayer";
@@ -16,7 +16,7 @@ const config =
         db: "stage",
         env: "Stage",
         layerEnv: "Stage",
-        version: "2",
+        version: "3",
       };
 
 const serverlessConfiguration: Serverless =
@@ -41,10 +41,6 @@ const serverlessConfiguration: Serverless =
         ],
         provider: {
           name: "aws",
-          vpc: {
-            securityGroupIds: ["sg-0969dc0e0b6350be9"],
-            subnetIds: ["subnet-03d4051c17d431e91", "subnet-0020501e7da89bcfd"],
-          },
           runtime,
           region,
           iamRoleStatements: [
@@ -55,10 +51,6 @@ const serverlessConfiguration: Serverless =
         functions: {
           lambda: {
             handler: "lambda.handler",
-            vpc: {
-              securityGroupIds: ["sg-0969dc0e0b6350be9"],
-              subnetIds: ["subnet-03d4051c17d431e91", "subnet-0020501e7da89bcfd"],
-            },
             timeout: 600,
             layers: [
               `arn:aws:lambda:${region}:${accountId}:layer:${layerName}${config.env}:${config.version}`,
